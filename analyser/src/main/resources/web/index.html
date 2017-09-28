@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Github Archive Demo</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<table></table>
+
+<script>
+  const ws = new WebSocket("ws://localhost:8081/fork-counts");
+  ws.onopen = function (event) {
+    console.log("Connected.", event);
+  };
+  ws.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    const content = $.map(data, function (elem) {
+      return '<tr><td>' + elem[ 'name' ] + '</td><td>' + elem[ 'count' ] + '</td></tr>';
+    });
+    $("table").html("<tr><th>Repo</th><th>Forks</th></tr>" + content.join());
+  };
+</script>
+
+</body>
+</html>
